@@ -5,9 +5,8 @@ is_int_and_float(string) - Проверка является ли строка �
 valid_setting(string) - Проверяет правельно ли введены насстройки расчета шага увеличения веса
 valid_muscular(string) - Проверяет в строке есть ли упоменание нужной группы мышц
 '''
-
-
-
+from trainer.bot.text import chest_muscles_test, back_muscles_test, shoulder_muscles_test, biceps_muscles_test, \
+    triceps_muscle_test, leg_muscles_test
 
 
 def step_calculation(string):
@@ -52,11 +51,13 @@ def valid_setting(string):
 
 
 def valid_muscular(string):
-    chest_muscles = ["Грудь", "Спина", "Плечи", "Бицепс", "Трицепс", "Ноги"]
+    chest_muscles = [f"{chest_muscles_test}", f"{back_muscles_test}", f"{shoulder_muscles_test}", f"{biceps_muscles_test}", f"{triceps_muscle_test}", f"{leg_muscles_test}"]
     if string in chest_muscles:
         return True
     else:
         return False
+
+
 
 # print(valid_muscular("Грудь"))
 # valid_setting('5,25,15,5')

@@ -5,6 +5,10 @@ from trainer.bot.def_bot import is_int_and_float
 from trainer.bot.replykey_board import button_menu
 from trainer.bot.setting import dp
 from trainer.bot.states_group import Trainer
+from trainer.bot.text import already_registered, enter_name_text, enter_age_text, \
+    enter_height_text, error_age_text, enter_weight_text, error_height_text, enter_average_calories_text, \
+    error_weight_text, enter_sleep_time_text, error_average_calories_text, about_self, error_sleep_time_text, \
+    enter_password_text, finish_registered, training_registration_text
 from trainer.data_base.def_db import add_db, is_included_db
 from trainer.moduls.trainers_db import Trainer_db
 from trainer.moduls.user_db import User_db
@@ -29,15 +33,15 @@ class Trainer(StatesGroup):
 """
 
 
-@dp.message(F.text == 'Зарегестироватся как Тренер')
+@dp.message(F.text == f'{training_registration_text}')
 async def sing_up(message, state: FSMContext):
     is_included = await is_included_db(Trainer_db, message.chat.username)
     button_menu_ = await button_menu(message)
     if is_included:
-        await message.answer("Вы уже зарегестрированны:", reply_markup=button_menu_)
+        await message.answer(f"{already_registered}", reply_markup=button_menu_)
         await state.clear()
     else:
-        await message.answer('Введите имя:')
+        await message.answer(f'{enter_name_text}')
         await state.set_state(Trainer.first_name)
 
 
@@ -45,7 +49,7 @@ async def sing_up(message, state: FSMContext):
 async def set_first_name(message, state: FSMContext):
     await state.update_data(nickname=message.chat.username)
     await state.update_data(first_name=message.text)
-    await message.answer("Введите свой возраст:")
+    await message.answer(f"{enter_age_text}")
     await state.set_state(Trainer.age)
 
 
@@ -53,11 +57,11 @@ async def set_first_name(message, state: FSMContext):
 async def set_age(message, state: FSMContext):
     if is_int_and_float(message.text):
         await state.update_data(age=message.text)
-        await message.answer("Введите свой рост:")
+        await message.answer(f"{enter_height_text}")
         await state.set_state(Trainer.height)
     else:
-        await message.answer("Возраст долженбыть числом: ")
-        await message.answer("Введите свой возраст:")
+        await message.answer(f"{error_age_text}")
+        await message.answer(f"{enter_age_text}")
         await state.set_state(Trainer.age)
 
 
@@ -65,11 +69,11 @@ async def set_age(message, state: FSMContext):
 async def set_height(message, state: FSMContext):
     if is_int_and_float(message.text):
         await state.update_data(height=message.text)
-        await message.answer("Введите свой вес:")
+        await message.answer(f"{enter_weight_text}")
         await state.set_state(Trainer.weight)
     else:
-        await message.answer("Рост долженбыть числом: ")
-        await message.answer("Введите свой рост:")
+        await message.answer(f"{error_height_text}")
+        await message.answer(f"{enter_height_text}")
         await state.set_state(Trainer.height)
 
 
@@ -77,11 +81,11 @@ async def set_height(message, state: FSMContext):
 async def set_weight(message, state: FSMContext):
     if is_int_and_float(message.text):
         await state.update_data(weight=message.text)
-        await message.answer("Введите сколько потребляете калорий в день:")
+        await message.answer(f"{enter_average_calories_text}")
         await state.set_state(Trainer.average_calories)
     else:
-        await message.answer("Вес должены быть числом: ")
-        await message.answer("Введите свой вес:")
+        await message.answer(f"{error_weight_text}")
+        await message.answer(f"{enter_weight_text}")
         await state.set_state(Trainer.weight)
 
 
@@ -89,11 +93,11 @@ async def set_weight(message, state: FSMContext):
 async def set_average_calories(message, state: FSMContext):
     if is_int_and_float(message.text):
         await state.update_data(average_calories=message.text)
-        await message.answer("Введите среднее время сна:")
+        await message.answer(f"{enter_sleep_time_text}")
         await state.set_state(Trainer.sleep_time)
     else:
-        await message.answer("Калории должены быть числом: ")
-        await message.answer("Введите сколько потребляете калорий в день:")
+        await message.answer(f"{error_average_calories_text}")
+        await message.answer(f"{enter_average_calories_text}")
         await state.set_state(Trainer.average_calories)
 
 
@@ -101,18 +105,18 @@ async def set_average_calories(message, state: FSMContext):
 async def set_sleep_time(message, state: FSMContext):
     if is_int_and_float(message.text):
         await state.update_data(average_calories=message.text)
-        await message.answer("Раскажите о себе:")
+        await message.answer(f"{about_self}")
         await state.set_state(Trainer.about_self)
     else:
-        await message.answer("Сон должены быть числом: ")
-        await message.answer("Введите среднее время сна:")
+        await message.answer(f"{error_sleep_time_text}")
+        await message.answer(f"{enter_sleep_time_text}")
         await state.set_state(Trainer.sleep_time)
 
 
 @dp.message(Trainer.about_self)
 async def set_about_self(message, state: FSMContext):
     await state.update_data(about_self=message.text)
-    await message.answer("Введите пороль:")
+    await message.answer(f"{enter_password_text}")
     await state.set_state(Trainer.password)
 
 
@@ -125,7 +129,7 @@ async def set_password(message, state: FSMContext):
     is_included = await is_included_db(User_db, message.chat.username)
     if not is_included:
         await add_db(User_db, **data)
-    await message.answer(f"Регестрация прошла успешна", reply_markup=button_menu_)
+    await message.answer(f"{finish_registered}", reply_markup=button_menu_)
     await state.clear()
 
 
