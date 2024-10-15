@@ -51,13 +51,12 @@ def valid_setting(string):
 
 
 def valid_muscular(string):
-    chest_muscles = [f"{chest_muscles_test}", f"{back_muscles_test}", f"{shoulder_muscles_test}", f"{biceps_muscles_test}", f"{triceps_muscle_test}", f"{leg_muscles_test}"]
+    chest_muscles = [f"{chest_muscles_test}", f"{back_muscles_test}", f"{shoulder_muscles_test}",
+                     f"{biceps_muscles_test}", f"{triceps_muscle_test}", f"{leg_muscles_test}"]
     if string in chest_muscles:
         return True
     else:
         return False
-
-
 
 # print(valid_muscular("Грудь"))
 # valid_setting('5,25,15,5')

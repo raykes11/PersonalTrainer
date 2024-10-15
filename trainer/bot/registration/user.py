@@ -1,9 +1,8 @@
-from aiogram import F
+from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 
 from trainer.bot.def_bot import is_int_and_float
 from trainer.bot.replykey_board import button_menu
-from trainer.bot.setting import dp
 from trainer.bot.states_group import RegistrationState
 from trainer.bot.text import user_registration_text, already_registered, enter_name_text, enter_age_text, \
     enter_height_text, error_age_text, enter_weight_text, error_height_text, enter_average_calories_text, \
@@ -29,8 +28,10 @@ class RegistrationState(StatesGroup):
 
 """
 
+router = Router()
 
-@dp.message(F.text == f'{user_registration_text}')
+
+@router.message(F.text == f'{user_registration_text}')
 async def sing_up(message, state: FSMContext):
     is_included = await is_included_db(User_db, message.chat.username)
     button_menu_ = await button_menu(message)
@@ -42,7 +43,7 @@ async def sing_up(message, state: FSMContext):
         await state.set_state(RegistrationState.first_name)
 
 
-@dp.message(RegistrationState.first_name)
+@router.message(RegistrationState.first_name)
 async def set_first_name(message, state: FSMContext):
     await state.update_data(nickname=message.chat.username)
     await state.update_data(first_name=message.text)
@@ -50,7 +51,7 @@ async def set_first_name(message, state: FSMContext):
     await state.set_state(RegistrationState.age)
 
 
-@dp.message(RegistrationState.age)
+@router.message(RegistrationState.age)
 async def set_age(message, state: FSMContext):
     if is_int_and_float(message.text):
         await state.update_data(age=message.text)
@@ -62,7 +63,7 @@ async def set_age(message, state: FSMContext):
         await state.set_state(RegistrationState.age)
 
 
-@dp.message(RegistrationState.height)
+@router.message(RegistrationState.height)
 async def set_height(message, state: FSMContext):
     if is_int_and_float(message.text):
         await state.update_data(height=message.text)
@@ -74,7 +75,7 @@ async def set_height(message, state: FSMContext):
         await state.set_state(RegistrationState.height)
 
 
-@dp.message(RegistrationState.weight)
+@router.message(RegistrationState.weight)
 async def set_weight(message, state: FSMContext):
     if is_int_and_float(message.text):
         await state.update_data(weight=message.text)
@@ -86,7 +87,7 @@ async def set_weight(message, state: FSMContext):
         await state.set_state(RegistrationState.weight)
 
 
-@dp.message(RegistrationState.average_calories)
+@router.message(RegistrationState.average_calories)
 async def set_average_calories(message, state: FSMContext):
     if is_int_and_float(message.text):
         await state.update_data(average_calories=message.text)
@@ -98,7 +99,7 @@ async def set_average_calories(message, state: FSMContext):
         await state.set_state(RegistrationState.average_calories)
 
 
-@dp.message(RegistrationState.sleep_time)
+@router.message(RegistrationState.sleep_time)
 async def set_sleep_time(message, state: FSMContext):
     if is_int_and_float(message.text):
         await state.update_data(sleep_time=message.text)
@@ -110,7 +111,7 @@ async def set_sleep_time(message, state: FSMContext):
         await state.set_state(RegistrationState.sleep_time)
 
 
-@dp.message(RegistrationState.password)
+@router.message(RegistrationState.password)
 async def set_password(message, state: FSMContext):
     button_menu_ = await button_menu(message)
     await state.update_data(password=message.text)

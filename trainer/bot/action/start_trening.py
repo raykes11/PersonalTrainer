@@ -1,9 +1,8 @@
-from aiogram import F
+from aiogram import F, Router
 from aiogram.enums import ParseMode
 from aiogram.fsm.context import FSMContext
 
 from trainer.bot.replykey_board import button_set_trening, button_start, button_menu
-from trainer.bot.setting import dp
 from trainer.bot.states_group import StartTrening
 from trainer.bot.text import start_training_text, already_not_registered, choice_machine, request_add_machine_text, \
     finish_training_complited_text, reped
@@ -24,8 +23,10 @@ class StartTrening(StatesGroup):
     list_sleep_time = State()
 '''
 
+router = Router()
 
-@dp.message(F.text == f'{start_training_text}')
+
+@router.message(F.text == f'{start_training_text}')
 async def sing_up(message, state: FSMContext):
     is_included = await is_included_db(User_db, message.chat.username)
     if not is_included:
@@ -44,7 +45,7 @@ async def sing_up(message, state: FSMContext):
             await message.answer(f'{request_add_machine_text}', reply_markup=button_menu_)
 
 
-@dp.message(StartTrening.set_exercise)
+@router.message(StartTrening.set_exercise)
 async def set_age(message, state: FSMContext):
     dict_ = await state.get_data()
     if dict_['set_exercise'] == {}:

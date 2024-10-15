@@ -48,7 +48,7 @@ async def button_spesific_muscule(muscles):
     return keyboard.as_markup(resize_keyboard=True)
 
 
-def button_list_weight(list_):
+def button_list_weight(list_: object) -> object:
     keyboard = ReplyKeyboardBuilder()
     for number in list_:
         keyboard.button(text=number)

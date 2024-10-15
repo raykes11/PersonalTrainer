@@ -1,8 +1,8 @@
-from trainer.moduls.base import Base
-from sqlalchemy import Column, Integer, String, Date, UniqueConstraint, ForeignKey
+from sqlalchemy import Column, Integer, String, UniqueConstraint, ForeignKey
 from sqlalchemy.orm import relationship
-from sqlalchemy.schema import CreateTable
 
+from trainer.moduls.base import Base
+from trainer.moduls.user_machine import UserMachine_db
 from trainer.moduls.trainers_db import Trainer_db
 
 
@@ -40,6 +40,3 @@ class User_db(Base):
 
 
 
-
-
-# print(CreateTable(User_db.__table__), )

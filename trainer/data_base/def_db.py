@@ -4,8 +4,6 @@ from trainer.bot.def_bot import from_str_in_list
 from trainer.data_base.db import engine
 from trainer.moduls.base import Base
 from trainer.moduls.exercise_machine_db import ExerciseMachine_db
-from trainer.moduls.user_machine import UserMachine_db
-from trainer.moduls.trainers_db import Trainer_db
 from trainer.moduls.user_db import User_db
 
 """
@@ -27,6 +25,8 @@ set_trening(nickname, kwargs): Добовление тренажера в set_ex
 dict_user(nickname): Вся информация о юзере в виде словоря
 
 """
+
+
 async def connect_bd():
     async with engine.connect() as conn:
         res = await conn.execute(text("SELECT VERSION()"))
@@ -111,6 +111,7 @@ async def is_included_db_machine(title):
         return False
     else:
         return True
+
 
 async def all_machine(group_muscles):
     list_ = await get_all_machine_where_group_muscles(group_muscles)

@@ -1,10 +1,9 @@
-from aiogram import F
+from aiogram import F, Router
 from aiogram.enums import ParseMode
 from aiogram.fsm.context import FSMContext
 
 from trainer.bot.def_bot import step_calculation, valid_setting, valid_muscular, is_int_and_float
 from trainer.bot.replykey_board import muscle_group, button_menu, button_start
-from trainer.bot.setting import dp
 from trainer.bot.states_group import ExerciseMachine
 from trainer.bot.text import already_registered, creating_machine, add_title_texs, error_title_text, \
     creat_mass_list_tesx, example_4_parametr_text, example_5_parametr_text, muscle_selection_text, extra_weight_text, \
@@ -30,8 +29,10 @@ class ExerciseMachine(StatesGroup):
 
 """
 
+router = Router()
 
-@dp.message(F.text == f'{creating_machine}')
+
+@router.message(F.text == f'{creating_machine}')
 async def sing_up(message, state: FSMContext):
     is_included = await is_included_db(User_db, message.chat.username)
     if not is_included:
@@ -42,7 +43,7 @@ async def sing_up(message, state: FSMContext):
         await state.set_state(ExerciseMachine.title)
 
 
-@dp.message(ExerciseMachine.title)
+@router.message(ExerciseMachine.title)
 async def set_username(message, state: FSMContext):
     is_included = await is_included_db_machine(message.text)
     if is_included:
@@ -59,7 +60,7 @@ async def set_username(message, state: FSMContext):
         await state.set_state(ExerciseMachine.list_weight)
 
 
-@dp.message(ExerciseMachine.list_weight)
+@router.message(ExerciseMachine.list_weight)
 async def set_age(message, state: FSMContext):
     if valid_setting(message.text):
         list_weight = step_calculation(message.text)
@@ -74,7 +75,7 @@ async def set_age(message, state: FSMContext):
         await state.set_state(ExerciseMachine.list_weight)
 
 
-@dp.message(ExerciseMachine.group_muscles)
+@router.message(ExerciseMachine.group_muscles)
 async def set_age(message, state: FSMContext):
     if valid_muscular(message.text):
         await state.update_data(group_muscles=message.text)
@@ -85,7 +86,7 @@ async def set_age(message, state: FSMContext):
         await state.set_state(ExerciseMachine.group_muscles)
 
 
-@dp.message(ExerciseMachine.add_weight)
+@router.message(ExerciseMachine.add_weight)
 async def set_age(message, state: FSMContext):
     if is_int_and_float(message.text):
         await state.update_data(add_weight=message.text)
@@ -97,7 +98,7 @@ async def set_age(message, state: FSMContext):
         await state.set_state(ExerciseMachine.add_weight)
 
 
-@dp.message(ExerciseMachine.add_weight_item)
+@router.message(ExerciseMachine.add_weight_item)
 async def set_age(message, state: FSMContext):
     button_menu_ = await button_menu(message)
     if is_int_and_float(message.text):
